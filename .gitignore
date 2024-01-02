@@ -1,52 +1,113 @@
-# Prerequisites
-*.d
+#include <stdio.h>
+#include <string.h>
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+// Hesap yapısı (struct)
+struct Account {
+    char accountName[50];
+    char username[50];
+    char password[50];
+};
 
-# Linker output
-*.ilk
-*.map
-*.exp
+// Hesapları tutan dizi
+struct Account accounts[100];
+// Mevcut hesap sayısı
+int accountCount = 0;
 
-# Precompiled Headers
-*.gch
-*.pch
+// Fonksiyon prototipleri
+void addAccount();
+void listAccounts();
+void viewPassword();
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+int main() {
+    int choice;
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+    do {
+        // Kullanıcıya seçenekleri göster
+        printf("\n1. Hesap Ekle\n2. Hesaplari Listele\n3. Parolayi Goruntule\n4. Cikis\n");
+        printf("Seciminizi yapin: ");
+        scanf("%d", &choice);
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+        // Kullanıcının seçimine göre ilgili işlemi gerçekleştir
+        switch (choice) {
+            case 1:
+                addAccount();
+                break;
+            case 2:
+                listAccounts();
+                break;
+            case 3:
+                viewPassword();
+                break;
+            case 4:
+                printf("Programdan cikiliyor...\n");
+                break;
+            default:
+                printf("Gecersiz secim. Tekrar deneyin.\n");
+        }
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+    } while (choice != 4);
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+    return 0;
+}
+
+// Yeni bir hesap eklemek için fonksiyon
+void addAccount() {
+    if (accountCount < 100) {
+        printf("Hesap adi: ");
+        scanf("%s", accounts[accountCount].accountName);
+
+        printf("Kullanici adi: ");
+        scanf("%s", accounts[accountCount].username);
+
+        printf("Parola: ");
+        scanf("%s", accounts[accountCount].password);
+
+        printf("Hesap basariyla eklendi.\n");
+
+        // Hesap sayısını arttır
+        accountCount++;
+    } else {
+        printf("Maksimum hesap sayisina ulasildi.\n");
+    }
+}
+
+// Mevcut hesapları listelemek için fonksiyon
+void listAccounts() {
+    if (accountCount > 0) {
+        printf("\nMevcut Hesaplar:\n");
+        for (int i = 0; i < accountCount; i++) {
+            printf("Hesap adi: %s\n", accounts[i].accountName);
+            printf("Kullanici adi: %s\n", accounts[i].username);
+            printf("Parola: ********\n"); // Parolayı gizle
+            printf("----------------------------\n");
+        }
+    } else {
+        printf("Henuz hiç hesap eklenmemis.\n");
+    }
+}
+
+// Belirli bir hesabın parolasını görüntülemek için fonksiyon
+void viewPassword() {
+    if (accountCount > 0) {
+        char accountName[50];
+        printf("Parolasini goruntulemek istediginiz hesap adini girin: ");
+        scanf("%s", accountName);
+
+        int found = 0;
+        for (int i = 0; i < accountCount; i++) {
+            if (strcmp(accounts[i].accountName, accountName) == 0) {
+                printf("Hesap adi: %s\n", accounts[i].accountName);
+                printf("Kullanici adi: %s\n", accounts[i].username);
+                printf("Parola: %s\n", accounts[i].password);
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found) {
+            printf("Belirtilen hesap adina sahip hesap bulunamadi.\n");
+        }
+    } else {
+        printf("Henuz hic hesap eklenmemis.\n");
+    }
+}
